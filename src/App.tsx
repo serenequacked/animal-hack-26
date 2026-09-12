@@ -1,10 +1,24 @@
 import { Play, RotateCcw, Shield } from "lucide-react";
 import { useCallback, useRef, useState, useEffect } from "react";
 
-type EntityKind = "net" | "bag" | "boat" | "oil" | "hook" | "cleanup" | "reef";
+type EntityKind =
+  | "net"
+  | "bag"
+  | "boat"
+  | "oil"
+  | "hook"
+  | "cleanup"
+  | "reef"
+  | "vesselStrike"
+  | "bycatch"
+  | "fisheries"
+  | "finning"
+  | "tourism"
+  | "climateChange";
 type GameState = "ready" | "playing" | "ended";
 type RouteKey = "reef" | "shipping" | "fishing";
 type TrashKind = "net" | "bag" | "oil" | "hook";
+type WhaleSharkThreat = "vesselStrike" | "bycatch" | "fisheries" | "finning" | "tourism" | "climateChange";
 type AnimalKey = "turtle" | "vaquita" | "whaleShark";
 
 type Entity = {
@@ -86,6 +100,36 @@ const lessons: Record<EntityKind, Lesson> = {
     title: "Reached a protected reef",
     body: "Healthy reefs provide food, shelter, and resting areas during long migrations.",
     action: "Player impact: protected marine areas give wildlife safe places to recover."
+  },
+  vesselStrike: {
+    title: "Vessel strike risk",
+    body: "Whale sharks feed near the surface, where fast boats and tour vessels can injure them.",
+    action: "Solution: slow-speed zones and careful boat rules protect surface-feeding animals."
+  },
+  bycatch: {
+    title: "Caught as bycatch",
+    body: "Large filter feeders can be accidentally caught in fishing gear meant for other species.",
+    action: "Solution: safer gear, monitoring, and release training reduce accidental capture."
+  },
+  fisheries: {
+    title: "Fishing pressure",
+    body: "Heavy fishing activity can crowd feeding areas and increase the chance of gear encounters.",
+    action: "Solution: sustainable fisheries and protected feeding zones make migration safer."
+  },
+  finning: {
+    title: "Targeted for fins",
+    body: "Some sharks are harmed by illegal or unsustainable hunting for fins and other body parts.",
+    action: "Solution: enforce shark protections and avoid products that drive shark fin demand."
+  },
+  tourism: {
+    title: "Tourism pressure",
+    body: "Crowded wildlife tourism can stress whale sharks or push them away from feeding sites.",
+    action: "Solution: responsible tourism keeps distance, limits boats, and never blocks the animal."
+  },
+  climateChange: {
+    title: "Warming ocean current",
+    body: "Climate change can shift plankton blooms and feeding grounds that whale sharks rely on.",
+    action: "Solution: climate action and marine monitoring help protect changing habitats."
   }
 };
 
@@ -96,7 +140,13 @@ const entityMeta: Record<EntityKind, { label: string; danger: number; points: nu
   oil: { label: "Oil Slick", danger: 18, points: 14 },
   hook: { label: "Fishing Hook", danger: 20, points: 15 },
   cleanup: { label: "Beach Cleanup", danger: -15, points: 22 },
-  reef: { label: "Reef Sanctuary", danger: -25, points: 30 }
+  reef: { label: "Reef Sanctuary", danger: -25, points: 30 },
+  vesselStrike: { label: "Vessel Strike", danger: 26, points: 18 },
+  bycatch: { label: "Bycatch Gear", danger: 30, points: 18 },
+  fisheries: { label: "Fishing Fleet", danger: 22, points: 16 },
+  finning: { label: "Finning Threat", danger: 34, points: 20 },
+  tourism: { label: "Crowded Tourism", danger: 18, points: 14 },
+  climateChange: { label: "Warming Current", danger: 24, points: 16 }
 };
 
 const routes: Record<RouteKey, { label: string; description: string; risk: string; threatBias: EntityKind[]; scoreRate: number }> = {
@@ -144,7 +194,7 @@ const animals: Record<AnimalKey, { species: string; status: string; habitat: str
     species: "Whale Shark",
     status: "Endangered",
     habitat: "Warm tropical oceans",
-    mission: "Migrate through polluted waters while avoiding boats and discarded gear.",
+    mission: "Migrate through tourism zones, fisheries, warming currents, and vessel traffic.",
     color: "#6fa9c6",
     accent: "#244c68"
   }
@@ -184,24 +234,38 @@ function weightedChoice<T>(items: Array<{ item: T; weight: number }>) {
   return items[items.length - 1].item;
 }
 
-function randomEntity(id: number, score: number, route: RouteKey): Entity {
+function randomEntity(id: number, score: number, route: RouteKey, animal: AnimalKey): Entity {
   const roll = Math.random();
   const routeData = routes[route];
   const pollution = pollutionLevel(score);
   const trash: TrashKind[] = ["net", "bag", "oil", "hook"];
+  const whaleSharkThreats: WhaleSharkThreat[] = ["vesselStrike", "bycatch", "fisheries", "finning", "tourism", "climateChange"];
   const routeThreat = routeData.threatBias.filter((kind) => !["cleanup", "reef"].includes(kind));
   const risingTrash = trash[Math.floor(Math.random() * trash.length)];
   const kind: EntityKind =
-    roll > 0.94
-      ? "reef"
-      : roll > 0.84
-        ? "cleanup"
-        : weightedChoice([
-            { item: routeThreat[Math.floor(Math.random() * routeThreat.length)] ?? "bag", weight: 100 - pollution * 0.55 },
-            { item: risingTrash, weight: 18 + pollution * 1.35 },
-            { item: "bag", weight: 10 + pollution * 0.8 },
-            { item: "net", weight: route === "fishing" ? 16 + pollution * 0.9 : 6 + pollution * 0.45 }
-          ]);
+    animal === "whaleShark"
+      ? roll > 0.93
+        ? "reef"
+        : roll > 0.86
+          ? "cleanup"
+          : weightedChoice([
+              { item: whaleSharkThreats[Math.floor(Math.random() * whaleSharkThreats.length)], weight: 84 },
+              { item: "vesselStrike", weight: route === "shipping" ? 42 + pollution * 0.45 : 16 + pollution * 0.3 },
+              { item: "bycatch", weight: route === "fishing" ? 44 + pollution * 0.55 : 18 + pollution * 0.35 },
+              { item: "fisheries", weight: route === "fishing" ? 34 + pollution * 0.4 : 14 + pollution * 0.25 },
+              { item: "tourism", weight: route === "reef" ? 28 + pollution * 0.25 : 12 + pollution * 0.2 },
+              { item: "climateChange", weight: 12 + pollution * 0.55 }
+            ])
+      : roll > 0.94
+        ? "reef"
+        : roll > 0.84
+          ? "cleanup"
+          : weightedChoice([
+              { item: routeThreat[Math.floor(Math.random() * routeThreat.length)] ?? "bag", weight: 100 - pollution * 0.55 },
+              { item: risingTrash, weight: 18 + pollution * 1.35 },
+              { item: "bag", weight: 10 + pollution * 0.8 },
+              { item: "net", weight: route === "fishing" ? 16 + pollution * 0.9 : 6 + pollution * 0.45 }
+            ]);
   const baseSpeed = 1.45 + Math.min(score / 520, 4.2);
   const dimensions: Record<EntityKind, [number, number]> = {
     net: [136, 92],
@@ -210,7 +274,13 @@ function randomEntity(id: number, score: number, route: RouteKey): Entity {
     oil: [88, 34],
     hook: [42, 48],
     cleanup: [54, 42],
-    reef: [66, 56]
+    reef: [66, 56],
+    vesselStrike: [96, 46],
+    bycatch: [92, 70],
+    fisheries: [88, 52],
+    finning: [62, 54],
+    tourism: [82, 48],
+    climateChange: [96, 44]
   };
   const [width, height] = dimensions[kind];
 
@@ -372,6 +442,75 @@ function drawEntity(ctx: CanvasRenderingContext2D, entity: Entity, tick: number)
     ctx.fillRect(42, 18, 8, 28);
     ctx.fillStyle = "#58d186";
     ctx.fillRect(20, 34, 36, 10);
+  }
+
+  if (entity.kind === "vesselStrike") {
+    ctx.fillStyle = "#f4d35e";
+    ctx.fillRect(10, 8, 46, 16);
+    ctx.fillStyle = "#f76f63";
+    ctx.fillRect(0, 24, 80, 14);
+    ctx.fillStyle = "#d9fbff";
+    ctx.fillRect(24, 12, 12, 8);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.72)";
+    ctx.fillRect(58, 39, 34, 5);
+  }
+
+  if (entity.kind === "bycatch") {
+    ctx.strokeStyle = "#d8dde4";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(5, 4, entity.width - 10, entity.height - 10);
+    ctx.lineWidth = 1;
+    for (let x = 14; x < entity.width - 8; x += 14) {
+      ctx.beginPath();
+      ctx.moveTo(x, 4);
+      ctx.lineTo(x - 12, entity.height - 6);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#ff6f7c";
+    ctx.fillRect(52, 24, 16, 12);
+  }
+
+  if (entity.kind === "fisheries") {
+    ctx.fillStyle = "#ffcf5d";
+    ctx.fillRect(6, 12, 34, 15);
+    ctx.fillStyle = "#7a8791";
+    ctx.fillRect(0, 28, 70, 12);
+    ctx.fillStyle = "#d8dde4";
+    ctx.fillRect(46, 8, 5, 38);
+    ctx.strokeStyle = "#d8dde4";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(50, 10);
+    ctx.lineTo(82, 42);
+    ctx.stroke();
+  }
+
+  if (entity.kind === "finning") {
+    ctx.fillStyle = "#ff6f7c";
+    ctx.fillRect(14, 28, 38, 12);
+    ctx.fillStyle = "#f7a5ad";
+    ctx.fillRect(30, 10, 16, 22);
+    ctx.fillStyle = "#651f2c";
+    ctx.fillRect(48, 34, 10, 8);
+  }
+
+  if (entity.kind === "tourism") {
+    ctx.fillStyle = "#83ddea";
+    ctx.fillRect(6, 22, 60, 16);
+    ctx.fillStyle = "#e8fcff";
+    ctx.fillRect(16, 12, 12, 12);
+    ctx.fillRect(38, 12, 12, 12);
+    ctx.fillStyle = "#ffcf5d";
+    ctx.fillRect(66, 28, 10, 5);
+  }
+
+  if (entity.kind === "climateChange") {
+    ctx.fillStyle = "rgba(255, 111, 124, 0.72)";
+    ctx.fillRect(4, 12, 84, 14);
+    ctx.fillStyle = "rgba(255, 207, 93, 0.72)";
+    ctx.fillRect(20, 4, 56, 12);
+    ctx.fillStyle = "rgba(131, 221, 234, 0.48)";
+    ctx.fillRect(42, 28, 50, 10);
   }
 
   ctx.restore();
@@ -568,14 +707,14 @@ export function App() {
 
       spawnTimer -= 1;
       if (spawnTimer <= 0) {
-        entities.push(randomEntity(entityIdRef.current, internalScore, selectedRoute));
+        entities.push(randomEntity(entityIdRef.current, internalScore, selectedRoute, selectedAnimal));
         const currentPollution = pollutionLevel(internalScore);
         if (currentPollution > 25 && Math.random() < currentPollution / 135) {
-          entities.push(randomEntity(entityIdRef.current + 1, Math.max(0, internalScore - 60), selectedRoute));
+          entities.push(randomEntity(entityIdRef.current + 1, Math.max(0, internalScore - 60), selectedRoute, selectedAnimal));
           entityIdRef.current += 1;
         }
         if (currentPollution > 65 && Math.random() < currentPollution / 185) {
-          entities.push(randomEntity(entityIdRef.current + 1, Math.max(0, internalScore - 120), selectedRoute));
+          entities.push(randomEntity(entityIdRef.current + 1, Math.max(0, internalScore - 120), selectedRoute, selectedAnimal));
           entityIdRef.current += 1;
         }
         entityIdRef.current += 1;
