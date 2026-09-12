@@ -1,4 +1,4 @@
-import { Map, Play, RotateCcw, Shield } from "lucide-react";
+import { Play, RotateCcw, Shield } from "lucide-react";
 import { useCallback, useRef, useState, useEffect } from "react";
 
 type EntityKind = "net" | "bag" | "boat" | "oil" | "hook" | "cleanup" | "reef";
@@ -702,9 +702,17 @@ export function App() {
             <p className="eyebrow">Endangered animal survival game</p>
             <h1>WildFile</h1>
           </div>
-          <div className="status-pill">
-            <Shield size={18} />
-            {animals[selectedAnimal].status}
+          <div className="title-actions">
+            <div className="status-pill">
+              <Shield size={18} />
+              {animals[selectedAnimal].status}
+            </div>
+            {gameState === "playing" && (
+              <button type="button" className="compact-action" onClick={resetGame}>
+                <RotateCcw size={17} />
+                Restart
+              </button>
+            )}
           </div>
         </div>
 
@@ -716,78 +724,72 @@ export function App() {
               <h2>{animals[selectedAnimal].mission}</h2>
               <p>{routes[selectedRoute].description}</p>
               <p className="action-line">Watch how pollution rises over time: more trash means more danger.</p>
+
+              <div className="overlay-section">
+                <div className="icon-title">
+                  <Shield size={18} />
+                  <h2>Choose your animal</h2>
+                </div>
+                <div className="animal-grid">
+                  {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
+                    <button
+                      type="button"
+                      className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
+                      key={animalKey}
+                      onClick={() => setSelectedAnimal(animalKey)}
+                    >
+                      <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
+                      <strong>{animals[animalKey].species}</strong>
+                      <span>{animals[animalKey].habitat}</span>
+                      <small>{animals[animalKey].status}</small>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="overlay-section">
+                <div className="icon-title">
+                  <Shield size={18} />
+                  <h2>Choose a route</h2>
+                </div>
+                <div className="route-grid">
+                  {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
+                    <button
+                      type="button"
+                      className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
+                      key={routeKey}
+                      onClick={() => setSelectedRoute(routeKey)}
+                    >
+                      <strong>{routes[routeKey].label}</strong>
+                      <span>{routes[routeKey].description}</span>
+                      <small>{routes[routeKey].risk}</small>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {runSummary && (
+                <section className="summary-box">
+                  <div className="icon-title">
+                    <Shield size={18} />
+                    <h2>Run report</h2>
+                  </div>
+                  <p>Distance: {runSummary.distance}</p>
+                  <p>Main lesson: {runSummary.hardestThreat}</p>
+                  <p>Learned: {runSummary.lessons.join(", ")}</p>
+                </section>
+              )}
+
+              <button type="button" className="primary overlay-start" onClick={resetGame}>
+                {gameState === "ended" ? <RotateCcw size={18} /> : <Play size={18} />}
+                {gameState === "ended" ? "Try Again" : "Start"}
+              </button>
             </div>
           )}
           <div className="controls-strip">
             <span>Jump: Space / W / Arrow Up</span>
             <span>{routes[selectedRoute].label}</span>
           </div>
-        </div>
-
-        {gameState !== "playing" && (
-          <section className="menu-board" aria-label="Choose playable animal">
-            <div className="icon-title">
-              <Shield size={18} />
-              <h2>Choose your animal</h2>
-            </div>
-            <div className="animal-grid">
-              {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
-                <button
-                  type="button"
-                  className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
-                  key={animalKey}
-                  onClick={() => setSelectedAnimal(animalKey)}
-                >
-                  <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
-                  <strong>{animals[animalKey].species}</strong>
-                  <span>{animals[animalKey].habitat}</span>
-                  <small>{animals[animalKey].status}</small>
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {gameState !== "playing" && (
-          <section className="menu-board" aria-label="Choose migration route">
-            <div className="icon-title">
-              <Map size={18} />
-              <h2>Choose a migration route</h2>
-            </div>
-            <div className="route-grid">
-              {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
-                <button
-                  type="button"
-                  className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
-                  key={routeKey}
-                  onClick={() => setSelectedRoute(routeKey)}
-                >
-                  <strong>{routes[routeKey].label}</strong>
-                  <span>{routes[routeKey].description}</span>
-                  <small>{routes[routeKey].risk}</small>
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {runSummary && (
-          <section className="summary-box">
-            <div className="icon-title">
-              <Shield size={18} />
-              <h2>Run report</h2>
-            </div>
-            <p>Distance: {runSummary.distance}</p>
-            <p>Main lesson: {runSummary.hardestThreat}</p>
-            <p>Learned: {runSummary.lessons.join(", ")}</p>
-          </section>
-        )}
-
-        <div className="button-row">
-          <button type="button" className="primary" onClick={resetGame}>
-            {gameState === "playing" ? <RotateCcw size={18} /> : <Play size={18} />}
-            {gameState === "playing" ? "Restart" : "Start"}
-          </button>
         </div>
       </section>
     </main>
