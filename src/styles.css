@@ -89,7 +89,7 @@ button:hover {
 .route-grid,
 .animal-grid {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -102,8 +102,8 @@ button:hover {
   display: grid;
   gap: 5px;
   justify-content: stretch;
-  min-height: 98px;
-  padding: 10px;
+  min-height: 86px;
+  padding: 9px;
   text-align: left;
 }
 
@@ -245,17 +245,17 @@ canvas {
   background: rgba(2, 17, 25, 0.78);
   border: 1px solid rgba(208, 248, 255, 0.2);
   border-radius: 8px;
-  bottom: 54px;
   display: flex;
   flex-direction: column;
+  height: min(500px, calc(100% - 72px));
   left: 50%;
   max-width: 900px;
   overflow: hidden;
   padding: 0;
   position: absolute;
   right: auto;
-  top: 16px;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: min(900px, calc(100% - 32px));
 }
 
@@ -266,7 +266,7 @@ canvas {
 
 .mission-scroll {
   display: grid;
-  gap: 10px;
+  gap: 9px;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -454,7 +454,7 @@ canvas {
   border-top: 1px solid rgba(208, 248, 255, 0.16);
   display: flex;
   flex: 0 0 auto;
-  padding: 10px 14px;
+  padding: 8px 14px;
 }
 
 .overlay-start {
