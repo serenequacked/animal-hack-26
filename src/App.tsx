@@ -720,70 +720,74 @@ export function App() {
           <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} aria-label="A pixel sea turtle swimming through ocean obstacles." />
           {gameState !== "playing" && (
             <div className="mission-overlay">
-              <p className="eyebrow">Mission briefing</p>
-              <h2>{animals[selectedAnimal].mission}</h2>
-              <p>{routes[selectedRoute].description}</p>
-              <p className="action-line">Watch how pollution rises over time: more trash means more danger.</p>
+              <div className="mission-scroll">
+                <p className="eyebrow">Mission briefing</p>
+                <h2>{animals[selectedAnimal].mission}</h2>
+                <p>{routes[selectedRoute].description}</p>
+                <p className="action-line">Watch how pollution rises over time: more trash means more danger.</p>
 
-              <div className="overlay-section">
-                <div className="icon-title">
-                  <Shield size={18} />
-                  <h2>Choose your animal</h2>
-                </div>
-                <div className="animal-grid">
-                  {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
-                    <button
-                      type="button"
-                      className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
-                      key={animalKey}
-                      onClick={() => setSelectedAnimal(animalKey)}
-                    >
-                      <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
-                      <strong>{animals[animalKey].species}</strong>
-                      <span>{animals[animalKey].habitat}</span>
-                      <small>{animals[animalKey].status}</small>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="overlay-section">
-                <div className="icon-title">
-                  <Shield size={18} />
-                  <h2>Choose a route</h2>
-                </div>
-                <div className="route-grid">
-                  {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
-                    <button
-                      type="button"
-                      className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
-                      key={routeKey}
-                      onClick={() => setSelectedRoute(routeKey)}
-                    >
-                      <strong>{routes[routeKey].label}</strong>
-                      <span>{routes[routeKey].description}</span>
-                      <small>{routes[routeKey].risk}</small>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {runSummary && (
-                <section className="summary-box">
+                <div className="overlay-section">
                   <div className="icon-title">
                     <Shield size={18} />
-                    <h2>Run report</h2>
+                    <h2>Choose your animal</h2>
                   </div>
-                  <p>Distance: {runSummary.distance}</p>
-                  <p>Main lesson: {runSummary.hardestThreat}</p>
-                  <p>Learned: {runSummary.lessons.join(", ")}</p>
-                </section>
-              )}
+                  <div className="animal-grid">
+                    {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
+                      <button
+                        type="button"
+                        className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
+                        key={animalKey}
+                        onClick={() => setSelectedAnimal(animalKey)}
+                      >
+                        <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
+                        <strong>{animals[animalKey].species}</strong>
+                        <span>{animals[animalKey].habitat}</span>
+                        <small>{animals[animalKey].status}</small>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-              <button type="button" className="primary overlay-start" onClick={resetGame}>
-                {gameState === "ended" ? <RotateCcw size={18} /> : <Play size={18} />}
-                {gameState === "ended" ? "Try Again" : "Start"}
-              </button>
+                <div className="overlay-section">
+                  <div className="icon-title">
+                    <Shield size={18} />
+                    <h2>Choose a route</h2>
+                  </div>
+                  <div className="route-grid">
+                    {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
+                      <button
+                        type="button"
+                        className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
+                        key={routeKey}
+                        onClick={() => setSelectedRoute(routeKey)}
+                      >
+                        <strong>{routes[routeKey].label}</strong>
+                        <span>{routes[routeKey].description}</span>
+                        <small>{routes[routeKey].risk}</small>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {runSummary && (
+                  <section className="summary-box">
+                    <div className="icon-title">
+                      <Shield size={18} />
+                      <h2>Run report</h2>
+                    </div>
+                    <p>Distance: {runSummary.distance}</p>
+                    <p>Main lesson: {runSummary.hardestThreat}</p>
+                    <p>Learned: {runSummary.lessons.join(", ")}</p>
+                  </section>
+                )}
+              </div>
+
+              <div className="overlay-footer">
+                <button type="button" className="primary overlay-start" onClick={resetGame}>
+                  {gameState === "ended" ? <RotateCcw size={18} /> : <Play size={18} />}
+                  {gameState === "ended" ? "Try Again" : "Start"}
+                </button>
+              </div>
             </div>
           )}
           <div className="controls-strip">
