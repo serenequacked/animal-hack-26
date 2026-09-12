@@ -248,13 +248,15 @@ canvas {
   bottom: 54px;
   display: flex;
   flex-direction: column;
-  left: 16px;
+  left: 50%;
   max-width: 900px;
   overflow: hidden;
   padding: 0;
   position: absolute;
-  right: 16px;
+  right: auto;
   top: 16px;
+  transform: translateX(-50%);
+  width: min(900px, calc(100% - 32px));
 }
 
 .mission-overlay h2 {
