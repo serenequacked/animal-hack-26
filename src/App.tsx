@@ -59,7 +59,9 @@ type Keys = {
 
 const CANVAS_WIDTH = 900;
 const CANVAS_HEIGHT = 540;
-const TURTLE_SIZE = 46;
+const BASE_SPRITE_SIZE = 46;
+const SPRITE_SCALE = 1.75;
+const PLAYER_SIZE = Math.round(BASE_SPRITE_SIZE * SPRITE_SCALE);
 const MAX_HEALTH = 100;
 const GRAVITY = 0.34;
 const JUMP_FORCE = -7.8;
@@ -309,6 +311,7 @@ function drawAnimal(ctx: CanvasRenderingContext2D, x: number, y: number, tick: n
     const template = animals[animal];
     ctx.save();
     ctx.translate(x, y);
+    ctx.scale(SPRITE_SCALE, SPRITE_SCALE);
     const tail = Math.sin(tick / 8) * 4;
     ctx.fillStyle = template.accent;
     ctx.fillRect(4, 22 + tail, 14, 10);
@@ -329,6 +332,7 @@ function drawAnimal(ctx: CanvasRenderingContext2D, x: number, y: number, tick: n
 
   ctx.save();
   ctx.translate(x, y);
+  ctx.scale(SPRITE_SCALE, SPRITE_SCALE);
   const paddle = Math.sin(tick / 9) * 4;
 
   ctx.fillStyle = "#2f8f74";
@@ -639,7 +643,7 @@ export function App() {
     let animationId = 0;
     let entities: Entity[] = [];
     let floatingTexts: FloatingText[] = [];
-    let turtle = { x: 118, y: CANVAS_HEIGHT / 2 - TURTLE_SIZE / 2, width: TURTLE_SIZE, height: TURTLE_SIZE };
+    let turtle = { x: 118, y: CANVAS_HEIGHT / 2 - PLAYER_SIZE / 2, width: PLAYER_SIZE, height: PLAYER_SIZE };
     let turtleVelocity = 0;
     let jumpWasHeld = false;
     let internalHealth = MAX_HEALTH;
@@ -688,8 +692,8 @@ export function App() {
         turtleVelocity = 1.8;
       }
 
-      if (turtle.y > CANVAS_HEIGHT - TURTLE_SIZE - 18) {
-        turtle.y = CANVAS_HEIGHT - TURTLE_SIZE - 18;
+      if (turtle.y > CANVAS_HEIGHT - PLAYER_SIZE - 18) {
+        turtle.y = CANVAS_HEIGHT - PLAYER_SIZE - 18;
         turtleVelocity = JUMP_FORCE * 0.55;
         internalHealth = clamp(internalHealth - 12, 0, MAX_HEALTH);
         setHealth(internalHealth);
@@ -732,7 +736,7 @@ export function App() {
         drawEntity(ctx, entity, tick);
       }
 
-      const turtleBox = { ...turtle, x: turtle.x + 7, y: turtle.y + 7, width: turtle.width - 12, height: turtle.height - 14 };
+      const turtleBox = { ...turtle, x: turtle.x + 16, y: turtle.y + 16, width: turtle.width - 30, height: turtle.height - 32 };
       const collided = entities.find((entity) =>
         intersects(turtleBox, { x: entity.x, y: entity.y, width: entity.width, height: entity.height })
       );

@@ -44,12 +44,13 @@ button:hover {
 }
 
 .app-shell {
-  align-items: stretch;
+  align-items: center;
   background:
     linear-gradient(180deg, rgba(14, 100, 124, 0.62), rgba(6, 25, 36, 0.96)),
     #061924;
-  display: block;
+  display: flex;
   height: 100vh;
+  justify-content: center;
   padding: 14px;
 }
 
@@ -63,11 +64,11 @@ button:hover {
 .game-panel {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 28px);
-  margin: 0 auto;
+  height: min(720px, calc(100vh - 28px));
   max-width: 1180px;
   min-width: 0;
   padding: 14px;
+  width: min(1180px, 100%);
 }
 
 .title-row,
