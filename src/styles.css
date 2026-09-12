@@ -271,6 +271,168 @@ canvas {
   padding: 14px;
 }
 
+.mission-header {
+  align-items: start;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) 108px;
+}
+
+.animal-preview {
+  background: rgba(131, 221, 234, 0.14);
+  border: 1px solid rgba(208, 248, 255, 0.24);
+  border-radius: 8px;
+  height: 86px;
+  image-rendering: pixelated;
+  position: relative;
+  width: 108px;
+}
+
+.preview-body,
+.preview-head,
+.preview-tail,
+.preview-fin,
+.preview-eye,
+.preview-shell {
+  position: absolute;
+}
+
+.animal-preview.turtle .preview-body {
+  background: #70c27a;
+  height: 40px;
+  left: 35px;
+  top: 24px;
+  width: 38px;
+}
+
+.animal-preview.turtle .preview-shell {
+  background: #1e5d4f;
+  height: 28px;
+  left: 41px;
+  top: 30px;
+  width: 26px;
+}
+
+.animal-preview.turtle .preview-head {
+  background: #74c87d;
+  height: 18px;
+  left: 70px;
+  top: 35px;
+  width: 18px;
+}
+
+.animal-preview.turtle .preview-tail {
+  background: #d8b76b;
+  height: 14px;
+  left: 24px;
+  top: 38px;
+  width: 14px;
+}
+
+.animal-preview.turtle .preview-fin {
+  background: #2f8f74;
+  height: 10px;
+  width: 24px;
+}
+
+.animal-preview.turtle .preview-fin.top {
+  left: 26px;
+  top: 20px;
+}
+
+.animal-preview.turtle .preview-fin.bottom {
+  left: 26px;
+  top: 59px;
+}
+
+.animal-preview.vaquita .preview-body,
+.animal-preview.whaleShark .preview-body {
+  height: 30px;
+  left: 30px;
+  top: 28px;
+  width: 52px;
+}
+
+.animal-preview.vaquita .preview-body {
+  background: #b9d6df;
+}
+
+.animal-preview.whaleShark .preview-body {
+  background: #6fa9c6;
+}
+
+.animal-preview.vaquita .preview-head,
+.animal-preview.whaleShark .preview-head {
+  height: 22px;
+  left: 75px;
+  top: 32px;
+  width: 18px;
+}
+
+.animal-preview.vaquita .preview-head {
+  background: #b9d6df;
+}
+
+.animal-preview.whaleShark .preview-head {
+  background: #6fa9c6;
+}
+
+.animal-preview.vaquita .preview-tail,
+.animal-preview.whaleShark .preview-tail {
+  height: 18px;
+  left: 18px;
+  top: 34px;
+  width: 16px;
+}
+
+.animal-preview.vaquita .preview-tail,
+.animal-preview.vaquita .preview-fin {
+  background: #596d75;
+}
+
+.animal-preview.whaleShark .preview-tail,
+.animal-preview.whaleShark .preview-fin {
+  background: #244c68;
+}
+
+.animal-preview.vaquita .preview-fin,
+.animal-preview.whaleShark .preview-fin {
+  height: 9px;
+  left: 42px;
+  width: 24px;
+}
+
+.animal-preview.vaquita .preview-fin.top,
+.animal-preview.whaleShark .preview-fin.top {
+  top: 20px;
+}
+
+.animal-preview.vaquita .preview-fin.bottom,
+.animal-preview.whaleShark .preview-fin.bottom {
+  top: 57px;
+}
+
+.animal-preview.whaleShark .preview-shell {
+  background: rgba(232, 252, 255, 0.75);
+  height: 5px;
+  left: 45px;
+  top: 36px;
+  width: 5px;
+  box-shadow:
+    12px 0 rgba(232, 252, 255, 0.75),
+    24px 0 rgba(232, 252, 255, 0.75),
+    6px 10px rgba(232, 252, 255, 0.75),
+    18px 10px rgba(232, 252, 255, 0.75);
+}
+
+.preview-eye {
+  background: #062931;
+  height: 4px;
+  left: 84px;
+  top: 38px;
+  width: 4px;
+}
+
 .mission-scroll::-webkit-scrollbar {
   width: 10px;
 }
@@ -496,5 +658,13 @@ canvas {
 
   .status-pill {
     width: fit-content;
+  }
+
+  .mission-header {
+    grid-template-columns: 1fr;
+  }
+
+  .animal-preview {
+    justify-self: end;
   }
 }

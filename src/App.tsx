@@ -721,10 +721,23 @@ export function App() {
           {gameState !== "playing" && (
             <div className="mission-overlay">
               <div className="mission-scroll">
-                <p className="eyebrow">Mission briefing</p>
-                <h2>{animals[selectedAnimal].mission}</h2>
-                <p>{routes[selectedRoute].description}</p>
-                <p className="action-line">Watch how pollution rises over time: more trash means more danger.</p>
+                <div className="mission-header">
+                  <div>
+                    <p className="eyebrow">Mission briefing</p>
+                    <h2>{animals[selectedAnimal].mission}</h2>
+                    <p>{routes[selectedRoute].description}</p>
+                    <p className="action-line">Watch how pollution rises over time: more trash means more danger.</p>
+                  </div>
+                  <div className={`animal-preview ${selectedAnimal}`} aria-hidden="true">
+                    <span className="preview-tail" />
+                    <span className="preview-body" />
+                    <span className="preview-head" />
+                    <span className="preview-fin top" />
+                    <span className="preview-fin bottom" />
+                    <span className="preview-eye" />
+                    {selectedAnimal === "turtle" && <span className="preview-shell" />}
+                  </div>
+                </div>
 
                 <div className="overlay-section">
                   <div className="icon-title">
