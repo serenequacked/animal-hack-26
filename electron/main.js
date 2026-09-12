@@ -10,7 +10,7 @@ function createWindow() {
     minWidth: 920,
     minHeight: 620,
     backgroundColor: "#082235",
-    title: "Turtle Tide",
+    title: "WildFile",
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false

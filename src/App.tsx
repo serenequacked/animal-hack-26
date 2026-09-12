@@ -431,7 +431,7 @@ export function App() {
   const learnedLessonsRef = useRef<string[]>([]);
   const [gameState, setGameState] = useState<GameState>("ready");
   const [score, setScore] = useState(0);
-  const [bestScore, setBestScore] = useState(() => Number(localStorage.getItem("turtle-tide-best") ?? 0));
+  const [bestScore, setBestScore] = useState(() => Number(localStorage.getItem("wildfile-best") ?? 0));
   const [health, setHealth] = useState(MAX_HEALTH);
   const [pollution, setPollution] = useState(0);
   const [lastFact, setLastFact] = useState("Fishing gear, plastic, and boat traffic are daily survival challenges for sea turtles.");
@@ -682,7 +682,7 @@ export function App() {
         });
         setBestScore((previous) => {
           const next = Math.max(previous, finalScore);
-          localStorage.setItem("turtle-tide-best", String(next));
+          localStorage.setItem("wildfile-best", String(next));
           return next;
         });
       }
@@ -696,11 +696,11 @@ export function App() {
 
   return (
     <main className="app-shell">
-      <section className="game-panel" aria-label="Turtle Tide game">
+      <section className="game-panel" aria-label="WildFile game">
         <div className="title-row">
           <div>
             <p className="eyebrow">Endangered animal survival game</p>
-            <h1>Turtle Tide</h1>
+            <h1>WildFile</h1>
           </div>
           <div className="status-pill">
             <Shield size={18} />

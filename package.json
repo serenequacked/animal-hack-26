@@ -1,5 +1,5 @@
 {
-  "name": "turtle-tide",
+  "name": "wildfile",
   "version": "0.1.0",
   "private": true,
   "description": "A 2D pixel conservation survival game about an endangered sea turtle escaping ocean threats.",
@@ -28,7 +28,7 @@
   },
   "build": {
     "appId": "com.animalhack.turtletide",
-    "productName": "Turtle Tide",
+    "productName": "WildFile",
     "files": [
       "dist/**/*",
       "electron/**/*",

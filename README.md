@@ -1,6 +1,6 @@
-# Turtle Tide
+# WildFile
 
-Turtle Tide is a 2D pixel survival game about a critically endangered hawksbill sea turtle migrating through human-made ocean threats. The player swims as long as possible, avoids hazards, finds healing resources, and sees short conservation facts during the run.
+WildFile is a 2D pixel survival game about endangered animals migrating through human-made ocean threats. The player survives as long as possible, avoids hazards, finds conservation support, and sees short conservation facts during the run.
 
 The prototype also includes a demo fundraising panel with sponsor-ad and donation buttons, showing how this game model could support shelters, rescue groups, or conservation campaigns.
 
@@ -45,7 +45,7 @@ npm run make
 Creates a macOS app bundle at:
 
 ```text
-release/mac-arm64/Turtle Tide.app
+release/mac-arm64/WildFile.app
 ```
 
 ```bash
@@ -55,7 +55,7 @@ npm run make:win
 Creates a portable Windows executable at:
 
 ```text
-release/Turtle Tide 0.1.0.exe
+release/WildFile 0.1.0.exe
 ```
 
 The Windows build produced here targets Windows ARM64 because it was built from an Apple Silicon macOS machine.
