@@ -450,6 +450,219 @@ canvas {
   gap: 8px;
 }
 
+.obstacle-list {
+  display: grid;
+  gap: 8px;
+}
+
+.obstacle-row {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(208, 248, 255, 0.13);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 58px minmax(0, 1fr);
+  min-height: 72px;
+  padding: 10px;
+}
+
+.obstacle-row strong {
+  color: #ffffff;
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+
+.obstacle-row p {
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.obstacle-sprite {
+  background: rgba(6, 25, 36, 0.82);
+  border: 2px solid rgba(232, 252, 255, 0.36);
+  border-radius: 6px;
+  display: block;
+  height: 50px;
+  image-rendering: pixelated;
+  overflow: hidden;
+  position: relative;
+  width: 50px;
+}
+
+.obstacle-sprite span {
+  display: block;
+  position: absolute;
+}
+
+.obstacle-sprite.net {
+  background:
+    repeating-linear-gradient(45deg, rgba(232, 252, 255, 0.5) 0 3px, transparent 3px 9px),
+    repeating-linear-gradient(-45deg, rgba(232, 252, 255, 0.34) 0 3px, transparent 3px 9px),
+    rgba(14, 76, 91, 0.88);
+}
+
+.obstacle-sprite.net .sprite-mark-a {
+  background: #ffcf5d;
+  height: 8px;
+  left: 7px;
+  top: 34px;
+  width: 34px;
+}
+
+.obstacle-sprite.bag {
+  background: #14394a;
+}
+
+.obstacle-sprite.bag .sprite-mark-a {
+  background: rgba(232, 252, 255, 0.78);
+  height: 28px;
+  left: 13px;
+  top: 16px;
+  width: 23px;
+}
+
+.obstacle-sprite.bag .sprite-mark-b {
+  border: 4px solid rgba(232, 252, 255, 0.78);
+  border-bottom: 0;
+  height: 13px;
+  left: 17px;
+  top: 8px;
+  width: 15px;
+}
+
+.obstacle-sprite.boat,
+.obstacle-sprite.vesselStrike,
+.obstacle-sprite.tourism {
+  background: #12364b;
+}
+
+.obstacle-sprite.boat .sprite-mark-a,
+.obstacle-sprite.vesselStrike .sprite-mark-a,
+.obstacle-sprite.tourism .sprite-mark-a {
+  background: #ff6f7c;
+  height: 12px;
+  left: 7px;
+  top: 25px;
+  width: 36px;
+}
+
+.obstacle-sprite.boat .sprite-mark-b,
+.obstacle-sprite.vesselStrike .sprite-mark-b,
+.obstacle-sprite.tourism .sprite-mark-b {
+  background: #eafcff;
+  height: 10px;
+  left: 22px;
+  top: 16px;
+  width: 14px;
+}
+
+.obstacle-sprite.oil {
+  background: #12364b;
+}
+
+.obstacle-sprite.oil .sprite-mark-a {
+  background: #17191b;
+  height: 18px;
+  left: 7px;
+  top: 24px;
+  width: 36px;
+}
+
+.obstacle-sprite.oil .sprite-mark-b {
+  background: #7d4bff;
+  height: 7px;
+  left: 16px;
+  top: 21px;
+  width: 18px;
+}
+
+.obstacle-sprite.hook {
+  background: #102f40;
+}
+
+.obstacle-sprite.hook .sprite-mark-a {
+  border: 5px solid #dce7ea;
+  border-left: 0;
+  border-top: 0;
+  height: 27px;
+  left: 16px;
+  top: 8px;
+  width: 18px;
+}
+
+.obstacle-sprite.cleanup,
+.obstacle-sprite.reef {
+  background: #0f4f50;
+}
+
+.obstacle-sprite.cleanup .sprite-mark-a,
+.obstacle-sprite.reef .sprite-mark-a {
+  background: #58d186;
+  height: 24px;
+  left: 13px;
+  top: 18px;
+  width: 24px;
+}
+
+.obstacle-sprite.bycatch,
+.obstacle-sprite.fisheries {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 207, 93, 0.42) 0 5px, transparent 5px 12px),
+    #12364b;
+}
+
+.obstacle-sprite.bycatch .sprite-mark-a,
+.obstacle-sprite.fisheries .sprite-mark-a {
+  background: #dce7ea;
+  height: 8px;
+  left: 8px;
+  top: 28px;
+  width: 34px;
+}
+
+.obstacle-sprite.finning {
+  background: #12364b;
+}
+
+.obstacle-sprite.finning .sprite-mark-a {
+  background: #8bbccc;
+  height: 32px;
+  left: 20px;
+  top: 8px;
+  transform: skewX(-18deg);
+  width: 14px;
+}
+
+.obstacle-sprite.finning .sprite-mark-b {
+  background: #ff6f7c;
+  height: 8px;
+  left: 11px;
+  top: 34px;
+  width: 28px;
+}
+
+.obstacle-sprite.climateChange {
+  background: #49233a;
+}
+
+.obstacle-sprite.climateChange .sprite-mark-a {
+  background: #ffcf5d;
+  height: 22px;
+  left: 14px;
+  top: 8px;
+  width: 22px;
+}
+
+.obstacle-sprite.climateChange .sprite-mark-b {
+  background: #ff6f7c;
+  height: 10px;
+  left: 8px;
+  top: 34px;
+  width: 34px;
+}
+
 .overlay-footer {
   background: rgba(2, 17, 25, 0.9);
   border-top: 1px solid rgba(208, 248, 255, 0.16);
@@ -458,12 +671,29 @@ canvas {
   padding: 8px 14px;
 }
 
+.menu-nav {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(110px, 0.35fr) minmax(0, 1fr);
+  width: 100%;
+}
+
 .overlay-start {
   width: 100%;
 }
 
 .compact-action {
   width: fit-content;
+}
+
+.secondary-action {
+  background: rgba(232, 252, 255, 0.14);
+  border: 1px solid rgba(232, 252, 255, 0.24);
+  color: #eafcff;
+}
+
+.secondary-action:hover {
+  background: rgba(232, 252, 255, 0.22);
 }
 
 .animal-card {
@@ -657,6 +887,15 @@ canvas {
   .button-row {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .menu-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .obstacle-row {
+    grid-template-columns: 50px minmax(0, 1fr);
+    padding: 8px;
   }
 
   .status-pill {

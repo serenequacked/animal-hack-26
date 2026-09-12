@@ -16,6 +16,7 @@ type EntityKind =
   | "tourism"
   | "climateChange";
 type GameState = "ready" | "playing" | "ended";
+type MenuStep = "animals" | "obstacles" | "route";
 type RouteKey = "reef" | "shipping" | "fishing";
 type TrashKind = "net" | "bag" | "oil" | "hook";
 type WhaleSharkThreat = "vesselStrike" | "bycatch" | "fisheries" | "finning" | "tourism" | "climateChange";
@@ -202,12 +203,54 @@ const animals: Record<AnimalKey, { species: string; status: string; habitat: str
   }
 };
 
+const animalObstacleKinds: Record<AnimalKey, EntityKind[]> = {
+  turtle: ["bag", "net", "hook", "boat", "oil", "climateChange"],
+  vaquita: ["net", "bycatch", "fisheries", "boat", "climateChange"],
+  whaleShark: ["vesselStrike", "bycatch", "fisheries", "finning", "tourism", "climateChange"]
+};
+
+const animalObstacleBriefings: Record<AnimalKey, Partial<Record<EntityKind, string>>> = {
+  turtle: {
+    bag: "Plastic bags can look like jellyfish, so hawksbill turtles may eat them and suffer blocked digestion or starvation.",
+    net: "Fishing nets can trap turtles underwater, causing drowning or long injuries during migration.",
+    hook: "Hooks and loose fishing line can pierce, wrap, or exhaust a turtle before it can feed or surface.",
+    boat: "Turtles breathe at the surface and use coastal habitat, which makes fast boat traffic dangerous.",
+    oil: "Oil slicks can contaminate turtle food, irritate skin and eyes, and damage nesting beaches.",
+    climateChange: "Warmer seas can damage coral reef feeding areas, while hotter nesting beaches can disrupt hatchling survival."
+  },
+  vaquita: {
+    net: "Gillnets are the vaquita's most urgent threat because the porpoise can become wrapped in the net and drown.",
+    bycatch: "Vaquitas are accidentally caught in gear set for shrimp and fish, including illegal totoaba fishing.",
+    fisheries: "The vaquita lives in a tiny range, so intense fishing activity leaves very little safe water.",
+    boat: "Boat traffic and noise add pressure in the vaquita's small habitat, especially when paired with fishing gear.",
+    climateChange: "A tiny population in one small area has little room to adapt when ocean conditions shift."
+  },
+  whaleShark: {
+    vesselStrike: "Whale sharks feed near the surface, so tour boats and fast vessels can strike or cut them.",
+    bycatch: "Large fishing gear can accidentally catch whale sharks even when fishers are targeting other species.",
+    fisheries: "Heavy fishing activity can crowd feeding areas and raise the chance of dangerous gear encounters.",
+    finning: "Demand for fins, meat, or oil can make whale sharks targets for illegal or unsustainable hunting.",
+    tourism: "Crowded tourism can interrupt feeding, stress animals, and put boats too close to their path.",
+    climateChange: "Warming oceans can shift plankton blooms, changing the feeding grounds whale sharks follow."
+  }
+};
+
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
 function pollutionLevel(score: number) {
   return clamp(Math.floor(score / 10), 0, 100);
+}
+
+function ObstacleSprite({ kind }: { kind: EntityKind }) {
+  return (
+    <span className={`obstacle-sprite ${kind}`} aria-hidden="true">
+      <span className="sprite-mark-a" />
+      <span className="sprite-mark-b" />
+      <span className="sprite-mark-c" />
+    </span>
+  );
 }
 
 function intersects(
@@ -581,6 +624,7 @@ export function App() {
   const [rescued, setRescued] = useState(0);
   const [runId, setRunId] = useState(0);
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalKey>("turtle");
+  const [menuStep, setMenuStep] = useState<MenuStep>("animals");
   const [selectedRoute, setSelectedRoute] = useState<RouteKey>("reef");
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [learnedLessons, setLearnedLessons] = useState<string[]>([]);
@@ -878,52 +922,79 @@ export function App() {
                     <span className="preview-fin top" />
                     <span className="preview-fin bottom" />
                     <span className="preview-eye" />
-                    {selectedAnimal === "turtle" && <span className="preview-shell" />}
+                    {(selectedAnimal === "turtle" || selectedAnimal === "whaleShark") && <span className="preview-shell" />}
                   </div>
                 </div>
 
-                <div className="overlay-section">
-                  <div className="icon-title">
-                    <Shield size={18} />
-                    <h2>Choose your animal</h2>
+                {menuStep === "animals" && (
+                  <div className="overlay-section">
+                    <div className="icon-title">
+                      <Shield size={18} />
+                      <h2>Choose your animal</h2>
+                    </div>
+                    <div className="animal-grid">
+                      {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
+                        <button
+                          type="button"
+                          className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
+                          key={animalKey}
+                          onClick={() => {
+                            setSelectedAnimal(animalKey);
+                            setMenuStep("obstacles");
+                          }}
+                        >
+                          <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
+                          <strong>{animals[animalKey].species}</strong>
+                          <span>{animals[animalKey].habitat}</span>
+                          <small>{animals[animalKey].status}</small>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="animal-grid">
-                    {(Object.keys(animals) as AnimalKey[]).map((animalKey) => (
-                      <button
-                        type="button"
-                        className={selectedAnimal === animalKey ? "animal-select-card selected" : "animal-select-card"}
-                        key={animalKey}
-                        onClick={() => setSelectedAnimal(animalKey)}
-                      >
-                        <span className="pixel-badge" style={{ background: animals[animalKey].color }} />
-                        <strong>{animals[animalKey].species}</strong>
-                        <span>{animals[animalKey].habitat}</span>
-                        <small>{animals[animalKey].status}</small>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                )}
 
-                <div className="overlay-section">
-                  <div className="icon-title">
-                    <Shield size={18} />
-                    <h2>Choose a route</h2>
+                {menuStep === "obstacles" && (
+                  <div className="overlay-section">
+                    <div className="icon-title">
+                      <Shield size={18} />
+                      <h2>{animals[selectedAnimal].species} obstacles</h2>
+                    </div>
+                    <div className="obstacle-list" aria-label={`${animals[selectedAnimal].species} obstacle briefing`}>
+                      {animalObstacleKinds[selectedAnimal].map((kind) => (
+                        <article className="obstacle-row" key={`${selectedAnimal}-${kind}`}>
+                          <ObstacleSprite kind={kind} />
+                          <div>
+                            <strong>{entityMeta[kind].label}</strong>
+                            <p>{animalObstacleBriefings[selectedAnimal][kind] ?? lessons[kind].body}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
                   </div>
-                  <div className="route-grid">
-                    {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
-                      <button
-                        type="button"
-                        className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
-                        key={routeKey}
-                        onClick={() => setSelectedRoute(routeKey)}
-                      >
-                        <strong>{routes[routeKey].label}</strong>
-                        <span>{routes[routeKey].description}</span>
-                        <small>{routes[routeKey].risk}</small>
-                      </button>
-                    ))}
+                )}
+
+                {menuStep === "route" && (
+                  <div className="overlay-section">
+                    <div className="icon-title">
+                      <Shield size={18} />
+                      <h2>Choose a route</h2>
+                    </div>
+                    <div className="route-grid">
+                      {(Object.keys(routes) as RouteKey[]).map((routeKey) => (
+                        <button
+                          type="button"
+                          className={selectedRoute === routeKey ? "route-card selected" : "route-card"}
+                          key={routeKey}
+                          onClick={() => setSelectedRoute(routeKey)}
+                        >
+                          <strong>{routes[routeKey].label}</strong>
+                          <span>{routes[routeKey].description}</span>
+                          <small>{routes[routeKey].risk}</small>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {runSummary && (
                   <section className="summary-box">
@@ -939,10 +1010,32 @@ export function App() {
               </div>
 
               <div className="overlay-footer">
-                <button type="button" className="primary overlay-start" onClick={resetGame}>
-                  {gameState === "ended" ? <RotateCcw size={18} /> : <Play size={18} />}
-                  {gameState === "ended" ? "Try Again" : "Start"}
-                </button>
+                {menuStep === "animals" && (
+                  <button type="button" className="primary overlay-start" onClick={() => setMenuStep("obstacles")}>
+                    View {animals[selectedAnimal].species} Obstacles
+                  </button>
+                )}
+                {menuStep === "obstacles" && (
+                  <div className="menu-nav">
+                    <button type="button" className="secondary-action" onClick={() => setMenuStep("animals")}>
+                      Back
+                    </button>
+                    <button type="button" className="primary" onClick={() => setMenuStep("route")}>
+                      Choose Route
+                    </button>
+                  </div>
+                )}
+                {menuStep === "route" && (
+                  <div className="menu-nav">
+                    <button type="button" className="secondary-action" onClick={() => setMenuStep("obstacles")}>
+                      Back
+                    </button>
+                    <button type="button" className="primary" onClick={resetGame}>
+                      {gameState === "ended" ? <RotateCcw size={18} /> : <Play size={18} />}
+                      {gameState === "ended" ? "Try Again" : "Start"}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
