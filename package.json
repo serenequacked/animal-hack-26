@@ -1,0 +1,53 @@
+{
+  "name": "turtle-tide",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A 2D pixel conservation survival game about an endangered sea turtle escaping ocean threats.",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "electron:dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "build": "vite build",
+    "make": "npm run build && electron-builder --mac dir",
+    "make:zip": "npm run build && electron-builder --mac zip",
+    "make:win": "npm run build && electron-builder --win portable"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "vite": "^7.0.0",
+    "typescript": "^5.8.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.0",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.animalhack.turtletide",
+    "productName": "Turtle Tide",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        "dir",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
